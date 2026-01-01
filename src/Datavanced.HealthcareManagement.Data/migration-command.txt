@@ -1,0 +1,1 @@
+Add-Migration InitialCreate -OutputDir Migrations -Project Datavanced.HealthcareManagement.Data -StartupProject Datavanced.HealthcareManagement.Api
