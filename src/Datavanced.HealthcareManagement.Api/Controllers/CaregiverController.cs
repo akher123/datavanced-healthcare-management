@@ -7,7 +7,7 @@ public class CaregiverController(ICaregiverService service) : BaseApiController<
 {
     private readonly ICaregiverService _service = service;
 
-    [HttpGet("search-caregivers")]
+    [HttpGet("get-caregivers")]
     public async Task<ActionResult<IEnumerable<CaregiverDto>>> SearchCaregiversAsync([FromQuery] string keyword)
     {
         var caregivers = await _service.SearchCaregiversAsync(keyword);

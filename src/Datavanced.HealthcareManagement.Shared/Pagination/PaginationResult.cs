@@ -1,0 +1,10 @@
+﻿namespace Datavanced.HealthcareManagement.Shared.Pagination;
+
+public class PaginationResult<TEntity>(int pageIndex,int pageSize,long count,IEnumerable<TEntity>data) where TEntity:class
+{
+    public int PageIndex { get; } = pageIndex;
+    public int PageSize { get; } = pageSize;
+    public long TotalCount { get; }=count;
+    public IEnumerable<TEntity> Data { get; } = data;
+
+}

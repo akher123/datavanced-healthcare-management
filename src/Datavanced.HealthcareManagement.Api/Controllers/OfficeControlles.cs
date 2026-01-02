@@ -3,11 +3,11 @@
 namespace Datavanced.HealthcareManagement.Api.Controllers;
 
 [Route(RoutePrefix.Offices)]
-public class OfficeControlle(IOfficeService service) : BaseApiController<OfficeControlle>
+public class OfficeController(IOfficeService service) : BaseApiController<OfficeController>
 {
     private readonly IOfficeService _service = service;
 
-    [HttpGet("search-offices")]
+    [HttpGet("get-offices")]
     public async Task<ActionResult<IEnumerable<OfficeDto>>> SearchOfficesAsync([FromQuery] string keyword)
     {
         var offices = await _service.SearchOfficesAsync(keyword);
