@@ -1,5 +1,5 @@
 using Datavanced.HealthcareManagement.Api;
-
+using Datavanced.HealthcareManagement.Api.Middleware;
 using Datavanced.HealthcareManagement.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,12 +17,14 @@ var jwtSettings = builder.Configuration
 // Application & Infrastructure
 builder.Services
     .AddInfrastructureServices(builder.Configuration)
-    .AddApplicationServices();
+    .AddApplicationServices()
+    .AddApiServices();
 
 
 // Authentication & Authorization
 builder.Services.AddJwtAuthentication(jwtSettings);
 builder.Services.AddAuthorization();
+
 
 // CORS
 builder.Services.AddCors(options =>
@@ -37,18 +39,20 @@ builder.Services.AddCors(options =>
 
 // Controllers & API
 builder.Services.AddControllers();
+
+
 builder.Services.AddResponseCaching();
 
 // Swagger / OpenAPI
 builder.Services.RegisterSwagger();
 
-
 #endregion
 
 var app = builder.Build();
+app.UseMiddleware<ExceptionMiddleware>();
+app.UseExceptionHandler(options => { });
 
 #region Middleware Pipeline
-
 // Development-only tools
 if (app.Environment.IsDevelopment())
 {

@@ -4,23 +4,26 @@ using System.Text;
 
 namespace Datavanced.HealthcareManagement.Shared;
 
-public class ErrorMessageResult
+public class ErrorMessage
 {
-    private string _errorMessage;
     public bool IsError { get; private set; }
-    public string ErrorMessage
+
+    private string message;
+    public int? StatusCode { get; set; }
+    public string Message
     {
-        get => _errorMessage;
+        get
+        {
+            return message;
+        }
         set
         {
             IsError = false;
-            if (string.IsNullOrWhiteSpace(value))
+            if (!string.IsNullOrWhiteSpace(value))
             {
-                return;
+                message = value;
+                IsError = true;
             }
-
-            _errorMessage = value;
-            IsError = true;
         }
     }
-}    
+}

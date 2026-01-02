@@ -1,5 +1,4 @@
-﻿
-using Datavanced.HealthcareManagement.Shared;
+﻿using Datavanced.HealthcareManagement.Api.Handler;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Net;
@@ -79,5 +78,9 @@ public static class ServiceCollectionExtensions
         return response.WriteAsync(payload);
     }
 
-
+    public static IServiceCollection AddApiServices(this IServiceCollection services)
+    {
+        services.AddExceptionHandler<CustomExceptionHandler>();
+        return services;
+    }
 }

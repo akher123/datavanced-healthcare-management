@@ -1,6 +1,7 @@
 ﻿using Datavanced.HealthcareManagement.Data.Models;
 using Datavanced.HealthcareManagement.Data.Repository;
 using Datavanced.HealthcareManagement.Services.DTO;
+using Datavanced.HealthcareManagement.Shared.ExceptionHelper;
 using Datavanced.HealthcareManagement.Shared.Pagination;
 
 namespace Datavanced.HealthcareManagement.Services;
@@ -44,19 +45,22 @@ public class PatientService : IPatientService
 
     public async Task<PatientDto?> GetByIdAsync(int id, CancellationToken cancellationToken)
     {
-        var p = await _repository.GetByIdAsync(id, cancellationToken);
-        if (p == null) return null;
+        var patient = await _repository.GetByIdAsync(id, cancellationToken);
+        if (patient == null)
+        {
+            throw new BadRequestException("Invalid Request.",nameof(patient));
+        }
 
         return new PatientDto
         {
-            PatientId = p.PatientId,
-            OfficeId = p.OfficeId,
-            FirstName = p.FirstName,
-            LastName = p.LastName,
-            DateOfBirth = p.DateOfBirth,
-            Phone = p.Phone,
-            Email = p.Email,
-            IsActive = p.IsActive
+            PatientId = patient.PatientId,
+            OfficeId = patient.OfficeId,
+            FirstName = patient.FirstName,
+            LastName = patient.LastName,
+            DateOfBirth = patient.DateOfBirth,
+            Phone = patient.Phone,
+            Email = patient.Email,
+            IsActive = patient.IsActive
         };
     }
 

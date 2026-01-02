@@ -1,4 +1,5 @@
-﻿using Datavanced.HealthcareManagement.Shared;
+﻿using Datavanced.HealthcareManagement.Api.Providers;
+using Datavanced.HealthcareManagement.Shared;
 using Datavanced.HealthcareManagement.Shared.Pagination;
 
 namespace Datavanced.HealthcareManagement.Api.Controllers;
@@ -51,7 +52,7 @@ public class PatientsController : BaseApiController<PatientsController>
             CancellationToken cancellationToken)
     {
         var patient = await _service.GetByIdAsync(id, cancellationToken);
-
+        
         return Ok(new ResponseMessage<PatientDto>
         {
             Result = patient
@@ -63,6 +64,7 @@ public class PatientsController : BaseApiController<PatientsController>
     /// </summary>
     /// <param name="dto">Patient creation data</param>
     [HttpPost("create-patient")]
+    [ModelValidation]
     public async Task<ActionResult<ResponseMessage<PatientDto>>>
         CreatePatientAsync(
             [FromBody] CreatePatientDto dto,
@@ -82,6 +84,7 @@ public class PatientsController : BaseApiController<PatientsController>
     /// <param name="id">Patient ID</param>
     /// <param name="dto">Updated patient data</param>
     [HttpPut("update-patient-by-id/{id:int}")]
+    [ModelValidation]
     public async Task<IActionResult>
         UpdatePatientAsync(
             int id,

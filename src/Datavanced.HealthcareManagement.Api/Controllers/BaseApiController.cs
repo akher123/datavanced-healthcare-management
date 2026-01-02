@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
-
+﻿
 namespace Datavanced.HealthcareManagement.Api.Controllers;
 
-[ApiController]
-//[Authorize]
+[ValidationFilter]
 public abstract class BaseApiController<T> : ControllerBase
 {
 
