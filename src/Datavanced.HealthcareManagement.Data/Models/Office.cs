@@ -12,7 +12,7 @@ public class Office
     public string Phone { get; set; }
     public DateTime CreatedAt { get; set; }
     public bool IsActive { get; set; }
-
+    public ICollection<ApplicationUser> Users { get; set; }
     public ICollection<Caregiver> Caregivers { get; set; }
     public ICollection<Patient> Patients { get; set; }
 }

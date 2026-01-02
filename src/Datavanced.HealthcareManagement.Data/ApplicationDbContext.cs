@@ -1,10 +1,12 @@
 ﻿using Datavanced.HealthcareManagement.Data.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace Datavanced.HealthcareManagement.Data;
 
-public class ApplicationDbContext: DbContext, IApplicationDbContext
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>, IApplicationDbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options) { }

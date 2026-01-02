@@ -1,4 +1,6 @@
-﻿using Datavanced.HealthcareManagement.Data.Repository;
+﻿using Datavanced.HealthcareManagement.Data.Models;
+using Datavanced.HealthcareManagement.Data.Repository;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,7 +17,12 @@ public static class DependencyInjection
             options.UseSqlServer(connectionString);
         });
 
-       services.AddScoped<ICaregiverRepository, CaregiverRepository>();
+        // Add Identity
+        services.AddIdentity<ApplicationUser, ApplicationRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
+
+        services.AddScoped<ICaregiverRepository, CaregiverRepository>();
 
         services.AddScoped<IOfficeRepository, OfficeRepository>();
         services.AddScoped<IPatientRepository, PatientRepository>();

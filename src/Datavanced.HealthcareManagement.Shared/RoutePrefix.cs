@@ -10,5 +10,7 @@ namespace Datavanced.HealthcareManagement.Shared
         public const string Offices = RoutePrefixBase + "offices";
         public const string Caregivers = RoutePrefixBase + "caregivers";
         public const string Patients = RoutePrefixBase + "patients";
+        public const string Auths = RoutePrefixBase + "auth";
+        
     }
 }

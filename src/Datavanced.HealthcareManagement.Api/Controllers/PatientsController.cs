@@ -36,14 +36,14 @@ public class PatientsController : BaseApiController<PatientsController>
         return CreatedAtAction(nameof(GetPatientByIdAsync), new { id = created.PatientId }, created);
     }
 
-    [HttpPut("update-patient/{id:int}")]
+    [HttpPut("update-patient-by-id/{id:int}")]
     public async Task<IActionResult> UpdatePatientAsync( int id, UpdatePatientDto dto,CancellationToken cancellationToken)
     {
         var result = await _service.UpdateAsync(id, dto, cancellationToken);
         return result ? NoContent() : NotFound();
     }
 
-    [HttpDelete("delete-patient/{id:int}")]
+    [HttpDelete("delete-patient-by-id/{id:int}")]
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
         var result = await _service.DeleteAsync(id, cancellationToken);

@@ -32,6 +32,12 @@ public class OfficeConfiguration : IEntityTypeConfiguration<Office>
                .HasDefaultValue(true);
 
         // Relationships
+
+        builder.HasMany<ApplicationUser>(o => o.Users)
+              .WithOne(u => u.Office)
+              .HasForeignKey(u => u.OfficeId)
+              .OnDelete(DeleteBehavior.Restrict);
+
         builder.HasMany(o => o.Caregivers)
                .WithOne(c => c.Office)
                .HasForeignKey(c => c.OfficeId)
