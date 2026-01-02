@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Datavanced.HealthcareManagement.Data\Datavanced.HealthcareManagement.Data.csproj" />
+    <ProjectReference Include="..\Datavanced.HealthcareManagement.Shared\Datavanced.HealthcareManagement.Shared.csproj" />
   </ItemGroup>
 
 </Project>
