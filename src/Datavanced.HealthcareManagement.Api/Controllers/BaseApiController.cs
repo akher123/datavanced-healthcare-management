@@ -3,7 +3,7 @@
 namespace Datavanced.HealthcareManagement.Api.Controllers;
 
 [ApiController]
-[Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+[Authorize]
 public abstract class BaseApiController<T> : ControllerBase
 {
 

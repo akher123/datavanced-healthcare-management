@@ -1,52 +1,55 @@
-
-
 using Datavanced.HealthcareManagement.Api;
 using Datavanced.HealthcareManagement.Shared;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services
-    .AddInfrastructureServices(builder.Configuration)
-    .AddApplicationServices();
+#region Services
 
-builder.Services.AddCors(options => options.AddPolicy("corspolicy", build => {
-    build.AllowAnyOrigin()
-        .AllowAnyMethod()
-        .AllowAnyHeader();
-
-}));
-// JWT Authentication
+// Configuration
 builder.Services.Configure<JwtSettings>(
     builder.Configuration.GetSection("Jwt"));
 
 var jwtSettings = builder.Configuration
     .GetSection("Jwt")
     .Get<JwtSettings>();
-builder.Services.RegisterSwagger();
-builder.Services.AddJwtAuthentication(jwtSettings);
 
+// Application & Infrastructure
+builder.Services
+    .AddInfrastructureServices(builder.Configuration)
+    .AddApplicationServices();
+
+// Authentication & Authorization
+builder.Services.AddJwtAuthentication(jwtSettings);
 builder.Services.AddAuthorization();
 
+// CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("corspolicy", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
 
+// Controllers & API
+builder.Services.AddControllers();
 builder.Services.AddResponseCaching();
 
-builder.Services.AddControllers();
+// Swagger / OpenAPI
+builder.Services.RegisterSwagger();
 
 
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+#endregion
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+#region Middleware Pipeline
+
+// Development-only tools
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
@@ -55,14 +58,25 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+// Static files
 app.UseStaticFiles();
 
+// Security
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+// CORS must be before auth
+app.UseCors("corspolicy");
+
+// Authentication & Authorization
 app.UseAuthentication();
+app.UseAuthorization();
 
+// Caching
+app.UseResponseCaching();
 
+// Endpoints
 app.MapControllers();
+
+#endregion
 
 app.Run();
