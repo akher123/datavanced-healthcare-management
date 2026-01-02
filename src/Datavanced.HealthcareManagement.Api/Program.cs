@@ -1,4 +1,5 @@
 using Datavanced.HealthcareManagement.Api;
+
 using Datavanced.HealthcareManagement.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +18,7 @@ var jwtSettings = builder.Configuration
 builder.Services
     .AddInfrastructureServices(builder.Configuration)
     .AddApplicationServices();
+
 
 // Authentication & Authorization
 builder.Services.AddJwtAuthentication(jwtSettings);
@@ -58,6 +60,8 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+
+
 // Static files
 app.UseStaticFiles();
 
@@ -75,6 +79,7 @@ app.UseAuthorization();
 app.UseResponseCaching();
 
 // Endpoints
+
 app.MapControllers();
 
 #endregion

@@ -3,7 +3,7 @@
 namespace Datavanced.HealthcareManagement.Api.Controllers;
 
 [ApiController]
-[Authorize]
+//[Authorize]
 public abstract class BaseApiController<T> : ControllerBase
 {
 

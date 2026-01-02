@@ -10,5 +10,6 @@ public interface IApplicationDbContext
     DbSet<Caregiver> Caregivers { get; }
     DbSet<Patient> Patients { get; }
     DbSet<PatientCaregiver> PatientCaregivers { get; }
+    DbSet<AuditEvent> AuditEvents { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

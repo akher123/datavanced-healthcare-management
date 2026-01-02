@@ -20,4 +20,8 @@
     <ProjectReference Include="..\Datavanced.HealthcareManagement.Services\Datavanced.HealthcareManagement.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Middleware\" />
+  </ItemGroup>
+
 </Project>

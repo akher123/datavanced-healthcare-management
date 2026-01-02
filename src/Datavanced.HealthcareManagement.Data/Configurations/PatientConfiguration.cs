@@ -13,6 +13,8 @@ public class PatientConfiguration : IEntityTypeConfiguration<Patient>
 
         // Primary Key
         builder.HasKey(p => p.PatientId);
+        builder.Property(p => p.PatientId)
+               .ValueGeneratedOnAdd(); 
 
         // Properties
         builder.Property(p => p.FirstName)

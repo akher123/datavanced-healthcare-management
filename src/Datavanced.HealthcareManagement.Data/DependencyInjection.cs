@@ -11,6 +11,9 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructureServices (this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddHttpContextAccessor();
+        services.AddScoped<AuditSaveChangesInterceptor>();
+
         services.AddDbContext<IApplicationDbContext, ApplicationDbContext>((sp, options) =>
         {
             var connectionString = configuration.GetConnectionString("Database");
