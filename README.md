@@ -16,7 +16,7 @@ A modern healthcare management system built using **.NET Core Web API**, **Entit
 
 ---
 
-## High-Level Architecture
+##1 High-Level Architecture
 
 The system is designed using a **modern N-Layer architecture**, with separation of concerns across **API**, **Service**, **Repository**, and **Shared Kernel** layers.  
 
@@ -80,3 +80,72 @@ The system is designed using a **modern N-Layer architecture**, with separation 
 - **Secure:** JWT authentication and **role-based access control**.  
 - **Auditable:** Search activity and CRUD operations are **logged**.  
 - **Performance-Oriented:** Optimized queries, pagination, and sorting ensure **response times < 300ms**.  
+
+##2 Search Optimization
+
+To ensure fast and efficient search across **Patients**, **Caregivers**, and **Offices**, the system applies several optimization strategies while supporting **pagination**, **sorting**, and **keyword search**.
+
+---
+
+### Implementation Details
+
+- Uses **EF Core** with `Include` to load related entities (`Office` and `PatientCaregivers → Caregiver`).  
+- Supports **keyword search** across multiple fields: `FirstName`, `LastName`, `Email`, `Phone`, `OfficeName`, and caregiver names.  
+- Applies **server-side pagination** and sorting to minimize database load.  
+- Maps entities to **DTOs** to reduce response payload and improve performance.  
+- Uses **output caching** for frequently accessed queries.
+
+**Example EF Core Query:**
+
+```csharp
+var patientsQuery = _context.Patients
+    .Include(p => p.Office)
+    .Include(p => p.PatientCaregivers)
+        .ThenInclude(pc => pc.Caregiver)
+    .AsQueryable();
+
+if (!string.IsNullOrWhiteSpace(query.Keyword))
+{
+    var keyword = $"%{query.Keyword.Trim()}%";
+    patientsQuery = patientsQuery.Where(p =>
+        EF.Functions.Like(p.FirstName, keyword) ||
+        EF.Functions.Like(p.LastName, keyword) ||
+        EF.Functions.Like(p.Email, keyword) ||
+        EF.Functions.Like(p.Phone, keyword) ||
+        EF.Functions.Like(p.Office.OfficeName, keyword) ||
+        p.PatientCaregivers.Any(pc =>
+            EF.Functions.Like(pc.Caregiver.FirstName, keyword) ||
+            EF.Functions.Like(pc.Caregiver.LastName, keyword))
+    );
+}
+```
+var total = await patientsQuery.CountAsync(cancellationToken);
+var patients = await patientsQuery
+    .Skip((query.PageIndex - 1) * query.PageSize)
+    .Take(query.PageSize)
+    .ToListAsync(cancellationToken);
+
+
+## Heare are appkied Best Practices for Faster Search 
+
+- **Database Indexing**  
+  Add indexes on frequently searched columns such as `FirstName`, `LastName`, `Email`, `Phone`, and `OfficeName`.
+
+- **Full-Text Search**  
+  For large datasets, use full-text indexes instead of `LIKE` queries to achieve better search performance.
+
+- **DTO Projection**  
+  Select only required fields when querying data to reduce memory usage and improve response time.
+
+- **AsNoTracking**  
+  Use `AsNoTracking()` for read-only queries to avoid Entity Framework Core change tracking overhead.
+
+- **Server-Side Pagination & Sorting**  
+  Apply `Skip`, `Take`, and `OrderBy` operations at the database level instead of in-memory processing.
+
+- **Caching**  
+  Use `MemoryCache` or `Redis` for frequently accessed queries such as patient or caregiver lists.
+
+- **Avoid N+1 Queries**  
+  Use `Include` or projection-based queries to efficiently load related data in a single database call.
+
