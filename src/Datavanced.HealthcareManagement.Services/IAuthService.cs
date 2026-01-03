@@ -30,7 +30,7 @@ public class AuthService : IAuthService
         var user = new ApplicationUser
         {
             UserName = request.Username,
-            Email = $"{request.Username}@example.com",
+            Email =request.Email,
             OfficeId = request.OfficeId
         };
 
@@ -40,15 +40,15 @@ public class AuthService : IAuthService
             throw new ApplicationException(string.Join(", ",
                 result.Errors.Select(e => e.Description)));
 
-        if (!await _roleManager.RoleExistsAsync(request.Role))
+        if (!await _roleManager.RoleExistsAsync(request.Role.ToString()))
         {
             await _roleManager.CreateAsync(new ApplicationRole
             {
-                Name = request.Role
+                Name = request.Role.ToString()
             });
         }
 
-        await _userManager.AddToRoleAsync(user, request.Role);
+        await _userManager.AddToRoleAsync(user,request.Role.ToString());
     }
 
     public async Task<AuthResponse> LoginAsync(LoginRequest request)
