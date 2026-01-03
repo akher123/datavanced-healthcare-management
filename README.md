@@ -308,7 +308,7 @@ Note: Do not type "Bearer " before the token; this specific configuration only r
 Click Authorize, then Close.
 
 
-**HCMS API Seed Data**
+**HCMS Initial Seed Data**
 
 The application automatically seeds roles and users into the database on startup.
 
