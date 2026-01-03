@@ -118,13 +118,13 @@ if (!string.IsNullOrWhiteSpace(query.Keyword))
             EF.Functions.Like(pc.Caregiver.LastName, keyword))
     );
 }
-```
+
 var total = await patientsQuery.CountAsync(cancellationToken);
 var patients = await patientsQuery
     .Skip((query.PageIndex - 1) * query.PageSize)
     .Take(query.PageSize)
     .ToListAsync(cancellationToken);
-
+```
 
 ## Heare are appkied Best Practices for Faster Search 
 
