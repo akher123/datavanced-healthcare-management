@@ -307,8 +307,22 @@ Note: Do not type "Bearer " before the token; this specific configuration only r
 
 Click Authorize, then Close.
 
+
+**HCMS API Seed Data**
+
+The application automatically seeds roles and users into the database on startup.
+
+- Roles
+  - Admin, Doctor, Nurse Receptionist
+
+- Office
+
+- Caregiver
+
+- User
 ## Quick Start Instructions
-Open the Auth section in Swagger.
+- Run Applicatin and brows swagger using url: https://localhost:7024/index.html
+- Open the Auth section in Swagger.
 
 - Use the POST /login endpoint with the admin credentials provided.
 
@@ -324,6 +338,7 @@ Open the Auth section in Swagger.
 <img width="1416" height="563" alt="image" src="https://github.com/user-attachments/assets/b2539208-1a56-4ee0-a144-7143b53a90bc" />
 
 **With JWT Token:**
+<img width="1742" height="861" alt="image" src="https://github.com/user-attachments/assets/fd80e602-d106-42ae-a231-d2eeedbd1922" />
 
 
 
