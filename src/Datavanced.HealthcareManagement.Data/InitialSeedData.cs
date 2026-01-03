@@ -1,5 +1,6 @@
 ﻿namespace Datavanced.HealthcareManagement.Data;
 using Datavanced.HealthcareManagement.Data.Models;
+using Datavanced.HealthcareManagement.Shared;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -117,7 +118,7 @@ public static class InitialSeedData
 
     public static async Task SeedRolesAsync(RoleManager<ApplicationRole> roleManager)
     {
-        string[] roles = { "Admin", "Doctor", "Nurse", "Receptionist" };
+        string[] roles = { nameof(SystemRole.Admin), nameof(SystemRole.Doctor), nameof(SystemRole.Nurse), nameof(SystemRole.Receptionist) };
 
         foreach (var role in roles)
         {
@@ -158,7 +159,7 @@ public static class InitialSeedData
         if (result.Succeeded)
         {
             // Assign role
-            await userManager.AddToRoleAsync(user, "Admin");
+            await userManager.AddToRoleAsync(user, nameof(SystemRole.Admin));
 
             // If your ApplicationUser has OfficeId:
             if (user is ApplicationUser appUser)

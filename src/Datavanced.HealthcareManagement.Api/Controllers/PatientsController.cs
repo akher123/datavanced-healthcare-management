@@ -1,4 +1,6 @@
 ﻿
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace Datavanced.HealthcareManagement.Api.Controllers;
 
@@ -12,8 +14,10 @@ public class PatientsController : BaseApiController<PatientsController>
         _service = service;
     }
 
+    
     [HttpGet("get-patients-by-Pagination")]
     [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Client)]
+    [Authorize(Roles = nameof(SystemRole.Admin) + "," + nameof(SystemRole.Doctor) + "," + nameof(SystemRole.Nurse) + "," + nameof(SystemRole.Receptionist))]
     public async Task<ActionResult<ResponseMessage<PaginationResult<PatientDto>>>>GetPatientsAsync([FromQuery] PaginationRequest query, CancellationToken cancellationToken)
     {
         var result = await _service.GetFilteredAsync(query, cancellationToken);
@@ -22,6 +26,7 @@ public class PatientsController : BaseApiController<PatientsController>
     }
 
     [HttpGet("get-patient-by-id/{id:int}")]
+    [Authorize(Roles = nameof(SystemRole.Admin) + "," + nameof(SystemRole.Doctor) + "," + nameof(SystemRole.Receptionist))]
     public async Task<ActionResult<ResponseMessage<PatientDto>>>GetPatientByIdAsync(int id,CancellationToken cancellationToken)
     {
         var patient = await _service.GetPatientByIdAsync(id, cancellationToken);
@@ -34,14 +39,19 @@ public class PatientsController : BaseApiController<PatientsController>
 
     [HttpPost("create-patient")]
     [ModelValidation]
+    [Authorize(Roles = nameof(SystemRole.Admin) + "," + nameof(SystemRole.Doctor) + "," + nameof(SystemRole.Receptionist))]
     public async Task<ActionResult<ResponseMessage<bool>>>CreatePatientAsync([FromBody] CreatePatientDto dto,CancellationToken cancellationToken)
     {
+        dto.OfficeId= LoggedInUser.OfficeId;
+
         var result = await _service.CreateAsync(dto, cancellationToken);
+
         return Ok(result);
     }
 
     [HttpPut("update-patient/{id:int}")]
     [ModelValidation]
+    [Authorize(Roles = nameof(SystemRole.Admin) + "," + nameof(SystemRole.Doctor) + "," + nameof(SystemRole.Receptionist))]
     public async Task<IActionResult>UpdatePatientAsync(int id,[FromBody] UpdatePatientDto dto,CancellationToken cancellationToken)
     {
         var result = await _service.UpdateAsync(id, dto, cancellationToken);
@@ -49,6 +59,7 @@ public class PatientsController : BaseApiController<PatientsController>
     }
 
     [HttpDelete("delete-patient-by-id/{id:int}")]
+    [Authorize(Roles = nameof(SystemRole.Admin))]
     public async Task<IActionResult>DeletePatientAsync(int id,CancellationToken cancellationToken)
     {
         var result = await _service.DeleteAsync(id, cancellationToken);

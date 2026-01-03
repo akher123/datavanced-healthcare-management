@@ -1,8 +1,4 @@
-﻿using Datavanced.HealthcareManagement.Data.Models;
-using Datavanced.HealthcareManagement.Data.Repository;
-using Datavanced.HealthcareManagement.Services.DTO;
-
-namespace Datavanced.HealthcareManagement.Services;
+﻿namespace Datavanced.HealthcareManagement.Services;
 
 public interface IOfficeService
 {

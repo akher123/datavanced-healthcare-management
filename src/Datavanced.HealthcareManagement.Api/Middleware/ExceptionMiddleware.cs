@@ -64,7 +64,7 @@ namespace Datavanced.HealthcareManagement.Api.Middleware
 
             context.Response.StatusCode = statusCode;
 
-            var response = new ResponseMessage<string>
+            var response = new ErrorMessage
             {
                 StatusCode = statusCode,
                 Message = message

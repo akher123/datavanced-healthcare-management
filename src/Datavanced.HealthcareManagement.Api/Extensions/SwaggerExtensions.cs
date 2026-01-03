@@ -1,5 +1,4 @@
-﻿namespace Datavanced.HealthcareManagement.Api;
-
+﻿namespace Datavanced.HealthcareManagement.Api.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -54,16 +53,20 @@ public static class SwaggerExtensions
     private static void AddJwtSecurity(SwaggerGenOptions c)
     {
         // JWT Bearer Authentication
-        c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        c.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
         {
             Name = "Authorization",
             In = ParameterLocation.Header,
             Type = SecuritySchemeType.Http,
             Scheme = "bearer",
             BearerFormat = "JWT",
-            Description = "Enter JWT token in the format: Bearer {your token}"
+            Description = "Enter JWT token in the format: bearer {your token}"
         });
-        
+        c.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+        {
+            [new OpenApiSecuritySchemeReference("bearer", document)] = []
+        });
+
     }
 }
 

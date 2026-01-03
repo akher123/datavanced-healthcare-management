@@ -1,6 +1,4 @@
-﻿using Datavanced.HealthcareManagement.Data.Models;
-using Datavanced.HealthcareManagement.Services.DTO;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace Datavanced.HealthcareManagement.Services;
 

@@ -1,11 +1,4 @@
-﻿using Datavanced.HealthcareManagement.Data.Models;
-using Datavanced.HealthcareManagement.Data.Repository;
-using Datavanced.HealthcareManagement.Services.DTO;
-using Datavanced.HealthcareManagement.Shared;
-using Datavanced.HealthcareManagement.Shared.ExceptionHelper;
-using Datavanced.HealthcareManagement.Shared.Pagination;
-using Microsoft.EntityFrameworkCore;
-
+﻿using Microsoft.EntityFrameworkCore;
 namespace Datavanced.HealthcareManagement.Services;
 
 public interface ICaregiverService
@@ -16,6 +9,7 @@ public interface ICaregiverService
     Task<ResponseMessage<bool>> UpdateCaregiverAsync(int id, UpdateCaregiverDto dto, CancellationToken cancellationToken);
     Task<bool> DeleteCaregiverByIdAsync(int id, CancellationToken cancellationToken);
 }
+
 public class CaregiverService : ICaregiverService
 {
     private readonly ICaregiverRepository _repository;

@@ -1,11 +1,4 @@
-﻿using Datavanced.HealthcareManagement.Data.Models;
-using Datavanced.HealthcareManagement.Data.Repository;
-using Datavanced.HealthcareManagement.Services.DTO;
-using Datavanced.HealthcareManagement.Shared;
-using Datavanced.HealthcareManagement.Shared.ExceptionHelper;
-using Datavanced.HealthcareManagement.Shared.Pagination;
-
-namespace Datavanced.HealthcareManagement.Services;
+﻿namespace Datavanced.HealthcareManagement.Services;
 
 public interface IPatientService
 {

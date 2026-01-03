@@ -1,7 +1,6 @@
 using Datavanced.HealthcareManagement.Api;
+using Datavanced.HealthcareManagement.Api.Extensions;
 using Datavanced.HealthcareManagement.Api.Middleware;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,13 +37,8 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Controllers & API
 builder.Services.AddControllers();
-
-
 builder.Services.AddResponseCaching();
-
-// Swagger / OpenAPI
 builder.Services.RegisterSwagger();
 
 #endregion
@@ -70,25 +64,15 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-
-
-// Static files
 app.UseStaticFiles();
 
-// Security
 app.UseHttpsRedirection();
 
-// CORS must be before auth
 app.UseCors("corspolicy");
 
-// Authentication & Authorization
 app.UseAuthentication();
 app.UseAuthorization();
-
-// Caching
 app.UseResponseCaching();
-
-// Endpoints
 
 app.MapControllers();
 

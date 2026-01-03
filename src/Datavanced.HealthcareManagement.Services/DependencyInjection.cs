@@ -10,7 +10,7 @@ public static class DependencyInjection
         services.AddScoped<ICaregiverService,CaregiverService>();
         services.AddScoped<IOfficeService, OfficeService>();
         services.AddScoped<IPatientService, PatientService>();
-
+        services.AddScoped<ILoggedInUserService, LoggedInUserService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<JwtTokenService>();
 
