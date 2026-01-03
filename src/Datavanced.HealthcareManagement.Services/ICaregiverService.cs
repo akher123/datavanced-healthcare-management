@@ -1,7 +1,10 @@
 ﻿using Datavanced.HealthcareManagement.Data.Models;
 using Datavanced.HealthcareManagement.Data.Repository;
 using Datavanced.HealthcareManagement.Services.DTO;
+using Datavanced.HealthcareManagement.Shared;
+using Datavanced.HealthcareManagement.Shared.ExceptionHelper;
 using Datavanced.HealthcareManagement.Shared.Pagination;
+using Microsoft.EntityFrameworkCore;
 
 namespace Datavanced.HealthcareManagement.Services;
 
@@ -9,6 +12,9 @@ public interface ICaregiverService
 {
     Task<IEnumerable<CaregiverDto>> SearchCaregiversAsync(string keyword);
     Task<PaginationResult<CaregiverDto>> GetCaregiverPaginationAsync(PaginationRequest query, CancellationToken cancellationToken);
+    Task<ResponseMessage<CaregiverDto>> CreateAsync(CreateCaregiverDto dto, CancellationToken cancellationToken);
+    Task<ResponseMessage<bool>> UpdateCaregiverAsync(int id, UpdateCaregiverDto dto, CancellationToken cancellationToken);
+    Task<bool> DeleteCaregiverByIdAsync(int id, CancellationToken cancellationToken);
 }
 public class CaregiverService : ICaregiverService
 {
@@ -17,6 +23,48 @@ public class CaregiverService : ICaregiverService
     public CaregiverService(ICaregiverRepository repository)
     {
         _repository = repository;
+    }
+
+    public async Task<ResponseMessage<CaregiverDto>> CreateAsync(CreateCaregiverDto dto, CancellationToken cancellationToken)
+    {
+        var caregiver = new Caregiver
+        {
+            OfficeId = dto.OfficeId,
+            FirstName = dto.FirstName,
+            LastName = dto.LastName,
+            Phone = dto.Phone,
+            Email = dto.Email,
+            IsActive = dto.IsActive,
+            CreatedAt = DateTime.UtcNow
+        };
+       await _repository.CreateAsync(caregiver,cancellationToken);
+
+       return new ResponseMessage<CaregiverDto>
+        {
+
+            Result = new CaregiverDto
+            {
+                CaregiverId = caregiver.CaregiverId,
+                OfficeId = caregiver.OfficeId,
+                FirstName = caregiver.FirstName,
+                LastName = caregiver.LastName,
+                Phone = caregiver.Phone,
+                Email = caregiver.Email,
+                IsActive = caregiver.IsActive,
+                CreatedAt = caregiver.CreatedAt
+            },
+            Message = "Caregiver created successfully",
+        };
+      }
+
+    public async Task<bool> DeleteCaregiverByIdAsync(int id, CancellationToken cancellationToken)
+    {
+        var caregiver = await _repository.GetCaregiverByIdAsync(id, cancellationToken);
+        if (caregiver == null)
+        {
+            throw new NotFoundException("Caregiver not found.");
+        }
+        return await _repository.DeleteByIdAsync(caregiver, cancellationToken);
     }
 
     public async Task<PaginationResult<CaregiverDto>> GetCaregiverPaginationAsync(PaginationRequest query, CancellationToken cancellationToken)
@@ -52,5 +100,25 @@ public class CaregiverService : ICaregiverService
             LastName = c.LastName,
             Phone = c.Phone
         });
+    }
+
+    public async Task<ResponseMessage<bool>> UpdateCaregiverAsync(int id, UpdateCaregiverDto dto, CancellationToken cancellationToken)
+    {
+        var caregiver = new Caregiver
+        {
+            OfficeId = dto.OfficeId,
+            FirstName = dto.FirstName,
+            LastName = dto.LastName,
+            Phone = dto.Phone,
+            Email = dto.Email,
+            IsActive = dto.IsActive,
+            CreatedAt = DateTime.UtcNow
+        };
+        await _repository.UpdateAsync(caregiver, cancellationToken);
+        return new ResponseMessage<bool>
+        {
+            Result = true,
+            Message = "Caregiver updated successfully.",
+        };
     }
 }

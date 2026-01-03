@@ -12,11 +12,11 @@ public interface IPatientRepository
 {
     Task<PaginationResult<Patient>> GetFilteredAsync( PaginationRequest query,CancellationToken cancellationToken);
     Task<Patient?> GetByIdAsync(int id, CancellationToken cancellationToken);
+    Task<Patient?> GetPatientCaregiversByIdAsync(int patientId, CancellationToken cancellationToken);
     Task AddAsync(Patient patient, CancellationToken cancellationToken);
     void Update(Patient patient);
     void Delete(Patient patient);
     Task SaveChangesAsync(CancellationToken cancellationToken);
-    Task<int> AddPatientCaregiverAsync(IEnumerable<PatientCaregiver> assignments, CancellationToken cancellationToken);
 }
 
 
@@ -85,9 +85,15 @@ public class PatientRepository : IPatientRepository
         return new PaginationResult<Patient>(pageIndex, pageSize, total, patients);
     }
 
+    public async Task<Patient?> GetPatientCaregiversByIdAsync(int id, CancellationToken cancellationToken)
+    {
+        return await _context.Patients
+            .Include(p => p.PatientCaregivers)
+                .ThenInclude(pc => pc.Caregiver)
+            .FirstOrDefaultAsync(p => p.PatientId == id, cancellationToken);
+    }
 
-
-    public async Task<Patient?> GetByIdAsync(int id, CancellationToken cancellationToken)
+    public async Task<Patient?> GetByIdAsync (int id, CancellationToken cancellationToken)
     {
         return await _context.Patients
                 .Include(p => p.PatientCaregivers)
@@ -108,11 +114,7 @@ public class PatientRepository : IPatientRepository
     {
         _context.Patients.Remove(patient);
     }
-    public async Task<int> AddPatientCaregiverAsync(IEnumerable<PatientCaregiver> assignments, CancellationToken cancellationToken)
-    {
-        await _context.PatientCaregivers.AddRangeAsync(assignments);
-        return await _context.SaveChangesAsync(cancellationToken);
-    }
+  
 
     public async Task SaveChangesAsync(CancellationToken cancellationToken)
     {

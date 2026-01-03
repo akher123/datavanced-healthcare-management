@@ -14,6 +14,8 @@ public class PatientDto
     public string Email { get; set; }
     public string OfficeName { get; set; }
     public bool IsActive { get; set; }
+    public List<CaregiverDto> Caregivers { get; set; } = new List<CaregiverDto>();
+
 }
 
 // For creating/updating data
@@ -43,6 +45,8 @@ public class CreatePatientDto
     public string? Email { get; set; }
 
     public bool IsActive { get; set; } = true;
+    public List<int> Caregivers { get; set; } = new List<int>();
+
 }
 
 public class UpdatePatientDto
@@ -71,4 +75,6 @@ public class UpdatePatientDto
     public string? Email { get; set; }
 
     public bool IsActive { get; set; }
+
+    public List<int> Caregivers { get; set; } = new List<int>();
 }

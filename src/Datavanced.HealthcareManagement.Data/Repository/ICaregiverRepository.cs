@@ -8,6 +8,10 @@ public interface ICaregiverRepository
 {
     Task<IEnumerable<Caregiver>> SearchCaregiversAsync(string searchTerm);
     Task<PaginationResult<Caregiver>> GetCaregiverFilteredAsync(PaginationRequest query, CancellationToken cancellationToken);
+    Task<int> CreateAsync(Caregiver caregiver,CancellationToken cancellationToken);
+    Task<int> UpdateAsync(Caregiver caregiver, CancellationToken cancellationToken);
+    Task<bool> DeleteByIdAsync(Caregiver caregiver, CancellationToken cancellationToken);
+    Task<Caregiver> GetCaregiverByIdAsync(int id, CancellationToken cancellationToken);
 }
 
 public class CaregiverRepository : ICaregiverRepository
@@ -17,6 +21,25 @@ public class CaregiverRepository : ICaregiverRepository
     public CaregiverRepository(IApplicationDbContext dbContext)
     {
         this.dbContext = dbContext;
+    }
+
+    public async Task<int> CreateAsync(Caregiver caregiver,CancellationToken cancellationToken)
+    {
+        dbContext.Caregivers.Add(caregiver);
+        return await dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+
+    public async Task<bool> DeleteByIdAsync(Caregiver caregiver, CancellationToken cancellationToken)
+    {
+        dbContext.Caregivers.Remove(caregiver);
+        return await dbContext.SaveChangesAsync(cancellationToken) > 0;
+    }
+
+    public async Task<Caregiver> GetCaregiverByIdAsync(int id, CancellationToken cancellationToken)
+    {
+        return await dbContext.Caregivers
+               .FirstOrDefaultAsync(cg => cg.CaregiverId == id, cancellationToken);
     }
 
     public async Task<PaginationResult<Caregiver>> GetCaregiverFilteredAsync(
@@ -109,5 +132,11 @@ public class CaregiverRepository : ICaregiverRepository
             );
         }
         return await query.ToListAsync();
+    }
+
+    public async Task<int> UpdateAsync(Caregiver caregiver, CancellationToken cancellationToken)
+    {
+        dbContext.Caregivers.Update(caregiver);
+        return await dbContext.SaveChangesAsync(cancellationToken);
     }
 }

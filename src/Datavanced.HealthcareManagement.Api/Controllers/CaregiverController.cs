@@ -21,14 +21,38 @@ public class CaregiverController(ICaregiverService service) : BaseApiController<
 
     [HttpGet("get-caregivers-by-Pagination")]
     [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Client)]
-    public async Task<ActionResult<ResponseMessage<PaginationResult<CaregiverDto>>>>
-       GetPatientsAsync(
-           [FromQuery] PaginationRequest query,
-           CancellationToken cancellationToken)
+    public async Task<ActionResult<ResponseMessage<PaginationResult<CaregiverDto>>>>GetPatientsAsync([FromQuery] PaginationRequest query,CancellationToken cancellationToken)
     {
         var result = await _service.GetCaregiverPaginationAsync(query, cancellationToken);
 
         return Ok(new ResponseMessage<PaginationResult<CaregiverDto>>
+        {
+            Result = result
+        });
+    }
+
+    [HttpPost("create-caregiver")]
+    [ModelValidation]
+    public async Task<ActionResult<ResponseMessage<CaregiverDto>>> CreateCaregiverAsync([FromBody] CreateCaregiverDto dto, CancellationToken cancellationToken)
+    {
+        var result = await _service.CreateAsync(dto, cancellationToken);
+        return Ok(result);
+    }
+
+    [HttpPut("update-caregiver/{id:int}")]
+    [ModelValidation]
+    public async Task<ActionResult<ResponseMessage<bool>>> UpdateCaregiverAsync(int id, [FromBody] UpdateCaregiverDto dto, CancellationToken cancellationToken)
+    {
+        var result = await _service.UpdateCaregiverAsync(id,dto, cancellationToken);
+        return Ok(result);
+    }
+
+    [HttpDelete("delete-caregiver-by-id/{id:int}")]
+    public async Task<IActionResult> DeleteCaregiverByIdAsync(int id, CancellationToken cancellationToken)
+    {
+        var result = await _service.DeleteCaregiverByIdAsync(id, cancellationToken);
+
+        return Ok(new ResponseMessage<bool>
         {
             Result = result
         });

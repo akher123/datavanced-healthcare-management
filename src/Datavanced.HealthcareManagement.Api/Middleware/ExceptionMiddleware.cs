@@ -1,5 +1,4 @@
-﻿using Datavanced.HealthcareManagement.Shared.ExceptionHelper;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Net;

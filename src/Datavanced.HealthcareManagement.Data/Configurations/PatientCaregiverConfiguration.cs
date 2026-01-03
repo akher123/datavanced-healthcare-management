@@ -27,6 +27,6 @@ public class PatientCaregiverConfiguration : IEntityTypeConfiguration<PatientCar
         builder.HasOne(pc => pc.Caregiver)
                .WithMany(c => c.PatientCaregivers)
                .HasForeignKey(pc => pc.CaregiverId)
-               .OnDelete(DeleteBehavior.Cascade);
+               .OnDelete(DeleteBehavior.Restrict);
     }
 }

@@ -43,6 +43,6 @@ public class CaregiverConfiguration : IEntityTypeConfiguration<Caregiver>
         builder.HasMany(c => c.PatientCaregivers)
                .WithOne(pc => pc.Caregiver)
                .HasForeignKey(pc => pc.CaregiverId)
-               .OnDelete(DeleteBehavior.Cascade);
+               .OnDelete(DeleteBehavior.Restrict);
     }
 }
