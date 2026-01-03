@@ -16,6 +16,7 @@ public interface IPatientRepository
     void Update(Patient patient);
     void Delete(Patient patient);
     Task SaveChangesAsync(CancellationToken cancellationToken);
+    Task<int> AddPatientCaregiverAsync(IEnumerable<PatientCaregiver> assignments, CancellationToken cancellationToken);
 }
 
 
@@ -106,6 +107,11 @@ public class PatientRepository : IPatientRepository
     public void Delete(Patient patient)
     {
         _context.Patients.Remove(patient);
+    }
+    public async Task<int> AddPatientCaregiverAsync(IEnumerable<PatientCaregiver> assignments, CancellationToken cancellationToken)
+    {
+        await _context.PatientCaregivers.AddRangeAsync(assignments);
+        return await _context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task SaveChangesAsync(CancellationToken cancellationToken)

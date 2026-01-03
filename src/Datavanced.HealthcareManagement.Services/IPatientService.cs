@@ -13,11 +13,15 @@ public interface IPatientService
     Task<PatientDto> CreateAsync(CreatePatientDto dto, CancellationToken cancellationToken);
     Task<bool> UpdateAsync(int id, UpdatePatientDto dto, CancellationToken cancellationToken);
     Task<bool> DeleteAsync(int id, CancellationToken cancellationToken);
+
+    Task<int> AddPatientCaregiverAsync(PatientCaregiverAssignmentDto dto, CancellationToken cancellationToken);
+
 }
 
 public class PatientService : IPatientService
 {
     private readonly IPatientRepository _repository;
+
 
     public PatientService(IPatientRepository repository)
     {
@@ -122,6 +126,19 @@ public class PatientService : IPatientService
         await _repository.SaveChangesAsync(cancellationToken);
 
         return true;
+    }
+
+
+    public async Task<int> AddPatientCaregiverAsync(PatientCaregiverAssignmentDto dto, CancellationToken cancellationToken)
+    {
+        var assignments = dto.CaregiverIds.Select(id => new PatientCaregiver
+        {
+            PatientId = dto.PatientId,
+            CaregiverId = id,
+            AssignedAt = DateTime.UtcNow
+        }).ToList();
+
+        return await _repository.AddPatientCaregiverAsync(assignments, cancellationToken);
     }
 }
 
