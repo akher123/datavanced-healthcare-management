@@ -277,5 +277,53 @@ To maintain data consistency, the following cache invalidation rules are applied
 - Optimized for healthcare compliance and performance
 
 
+Based on the Swagger UI screenshots you've provided for the Datadvanced Healthcare Management API, here is a structured API documentation guide. This guide explains how to authenticate and interact with the endpoints.
+<img width="1866" height="972" alt="image" src="https://github.com/user-attachments/assets/41f26657-baaf-42ac-9214-e308d8bee483" />
+
+## 🏥 Healthcare Management System (HCMS) API Documentation
+
+1. Authentication Flow
+To access any protected endpoints (Caregiver, Patient, Office), you must first obtain a JWT token.
+
+## Step A: Login
+
+Endpoint: POST /api/hcms/auth/login
+
+Credentials:
+
+- Username: admin
+
+- Password: Admin@123
+
+Action: Execute the request. The server will return a JSON response containing a token string.
+
+## Step B: Authorize
+
+Click the Authorize button (usually a lock icon at the top of the Swagger page).
+
+- In the value field, paste the token string only.
+
+Note: Do not type "Bearer " before the token; this specific configuration only requires the raw token.
+
+Click Authorize, then Close.
+
+## Quick Start Instructions
+Open the Auth section in Swagger.
+
+- Use the POST /login endpoint with the admin credentials provided.
+
+- Copy the token from the response body.
+
+- Use the Authorize button at the top to lock in your session.
+
+- Navigate to Patients or Caregivers and click "Try it out" to test the live data.
+
+<img width="1420" height="775" alt="image" src="https://github.com/user-attachments/assets/9c1ba37f-f0a9-4565-95b0-c168b8c85990" />
+
+**Without JWT Token:**
+<img width="1416" height="563" alt="image" src="https://github.com/user-attachments/assets/b2539208-1a56-4ee0-a144-7143b53a90bc" />
+
+**With JWT Token:**
+
 
 
