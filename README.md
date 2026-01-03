@@ -2,7 +2,7 @@
 Senior software engineer - 2nd round (assignment)
 # Datavanced Healthcare Management System
 
-A modern healthcare management system built using **.NET Core Web API**, **Entity Framework Core**, and **JWT-based authentication**. The system supports role-based access control, audit logging, and efficient CRUD and search operations for **Patients**, **Caregivers**, and **Offices**.
+I was trired to develop a modern healthcare management system built using **.NET Core Web API**, **Entity Framework Core**, and **JWT-based authentication**. The system supports role-based access control, audit logging, and efficient CRUD and search operations for **Patients**, **Caregivers**, and **Offices**.
 
 ---
 
