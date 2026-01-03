@@ -1,6 +1,7 @@
 using Datavanced.HealthcareManagement.Api;
 using Datavanced.HealthcareManagement.Api.Middleware;
-using Datavanced.HealthcareManagement.Shared;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +50,8 @@ builder.Services.RegisterSwagger();
 #endregion
 
 var app = builder.Build();
+
+
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseExceptionHandler(options => { });
 
@@ -56,6 +59,9 @@ app.UseExceptionHandler(options => { });
 // Development-only tools
 if (app.Environment.IsDevelopment())
 {
+    // Automatically apply migrations & seed data
+    await app.Services.SeedDatabaseAsync();
+
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {

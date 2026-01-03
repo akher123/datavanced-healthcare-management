@@ -23,7 +23,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     {
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-        //InitialSeedData.Seed(builder);
+       // InitialSeedData.Seed(builder);
 
         base.OnModelCreating(builder);
     }
