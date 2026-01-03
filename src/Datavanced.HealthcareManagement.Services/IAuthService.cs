@@ -4,7 +4,7 @@ namespace Datavanced.HealthcareManagement.Services;
 
 public interface IAuthService
 {
-    Task RegisterAsync(RegisterRequest request);
+    Task RegisterAsync(int officeId, RegisterRequest request);
     Task<AuthResponse> LoginAsync(LoginRequest request);
 }
 
@@ -25,13 +25,13 @@ public class AuthService : IAuthService
         _jwtService = jwtService;
     }
 
-    public async Task RegisterAsync(RegisterRequest request)
+    public async Task RegisterAsync(int officeId, RegisterRequest request)
     {
         var user = new ApplicationUser
         {
             UserName = request.Username,
             Email =request.Email,
-            OfficeId = request.OfficeId
+            OfficeId = officeId
         };
 
         var result = await _userManager.CreateAsync(user, request.Password);

@@ -17,8 +17,7 @@ namespace Datavanced.HealthcareManagement.Api.Controllers
         [Authorize(Roles = nameof(SystemRole.Admin))]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
-            request.OfficeId=LoggedInUser.OfficeId;
-            await _authService.RegisterAsync(request);
+            await _authService.RegisterAsync(LoggedInUser.OfficeId,request);
             return Ok(new { message = "User registered successfully" });
         }
 
