@@ -38,7 +38,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 builder.Services.AddResponseCaching();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.RegisterSwagger();
 
 var app = builder.Build();
 
