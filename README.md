@@ -16,7 +16,7 @@ A modern healthcare management system built using **.NET Core Web API**, **Entit
 
 ---
 
-##1 High-Level Architecture
+## 1.High-Level Architecture
 
 The system is designed using a **modern N-Layer architecture**, with separation of concerns across **API**, **Service**, **Repository**, and **Shared Kernel** layers.  
 
@@ -148,4 +148,134 @@ var patients = await patientsQuery
 
 - **Avoid N+1 Queries**  
   Use `Include` or projection-based queries to efficiently load related data in a single database call.
+
+## 3.Authorization and Auditing (Custom Middleware & Interceptors)
+
+The system implements secure **token-based authorization** and **comprehensive auditing** to ensure data integrity, compliance, and full traceability of user actions.
+
+---
+
+## Authorization Strategy
+
+Authorization is implemented using **JWT-based Role-Based Access Control (RBAC)**.
+
+---
+
+### JWT Authentication
+
+- Users authenticate using **username and password**.
+- On successful login, a **JWT token** is issued containing:
+  - User identity
+  - Role claims
+  - Token expiration
+- All protected API endpoints require a **valid JWT token**.
+
+---
+
+### JWT Validation
+
+- Token validation is centralized using a **custom extension method**.
+- Validates:
+  - Issuer
+  - Audience
+  - Token lifetime
+  - Signing key
+- Prevents expired or invalid tokens from accessing the API.
+
+**JWT Configuration Example:**
+
+```csharp
+services.AddJwtAuthentication(jwtSettings);
+```
+## 4.Caching Strategy (In-Memory & Redis)
+
+To achieve fast response times (**< 300ms**) and minimize database load, the system uses a **hybrid caching strategy** combining **In-Memory caching** and **Redis distributed caching**. This approach balances **speed**, **scalability**, and **data consistency**.
+
+---
+
+## Caching Objectives
+
+- Reduce repetitive database queries
+- Improve performance for search and read-heavy endpoints
+- Support scalability across multiple API instances
+- Maintain data consistency for healthcare records
+
+---
+
+## In-Memory Caching
+
+In-Memory caching is used for **single-instance**, high-speed access to frequently requested data.
+
+### Use Cases
+- Reference data (e.g., Offices, Roles)
+- Small, frequently accessed lookup data
+- Short-lived cache entries
+
+### Implementation
+- Uses `IMemoryCache`
+- Cache expiration controlled using absolute and sliding expiration
+- Cached per application instance
+
+### Benefits
+- Extremely fast access
+- Simple to implement
+- Ideal for low-latency, non-distributed scenarios
+
+---
+
+## Redis Distributed Caching
+
+Redis is used for **distributed caching** to support scalability across multiple API instances.
+
+### Use Cases
+- Patient and caregiver search results
+- Frequently accessed read-heavy endpoints
+- Shared cache across multiple servers
+
+### Implementation
+- Uses `IDistributedCache` with Redis
+- Serialized cache entries (JSON)
+- Centralized cache store for all API instances
+
+### Benefits
+- Shared cache across multiple instances
+- High availability and scalability
+- Prevents cache inconsistency in load-balanced environments
+
+---
+
+## Cache Invalidation Strategy
+
+To maintain data consistency, the following cache invalidation rules are applied:
+
+- Cache entries are invalidated on:
+  - Create
+  - Update
+  - Delete operations
+- Time-based expiration as a fallback mechanism
+- Selective cache key removal to avoid full cache flush
+
+---
+
+## Caching Best Practices
+
+- Cache only **read-heavy** and **frequently accessed** data
+- Avoid caching sensitive or frequently changing data
+- Use **short TTLs** for healthcare-related records
+- Apply caching at the **service layer**
+- Combine caching with pagination and filtering
+- Monitor cache hit/miss ratios
+
+---
+
+## Benefits
+
+- Ensures API response time **< 300ms**
+- Significantly reduces database load
+- Improves scalability and reliability
+- Maintains consistency across distributed systems
+- Optimized for healthcare compliance and performance
+
+
+
 
