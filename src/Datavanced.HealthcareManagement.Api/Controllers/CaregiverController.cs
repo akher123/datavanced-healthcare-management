@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-
+﻿
 namespace Datavanced.HealthcareManagement.Api.Controllers;
 
 [Route(RoutePrefix.Caregivers)]

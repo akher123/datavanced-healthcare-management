@@ -6,6 +6,7 @@ global using Datavanced.HealthcareManagement.Api.Providers;
 global using Datavanced.HealthcareManagement.Shared.ExceptionHelper;
 global using Datavanced.HealthcareManagement.Shared.Pagination;
 global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.AspNetCore.Authorization;
 global using Datavanced.HealthcareManagement.Api.Handler;
 global using Datavanced.HealthcareManagement.Data.Models;
 global using Microsoft.AspNetCore.Identity;
