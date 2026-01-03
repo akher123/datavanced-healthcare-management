@@ -23,6 +23,7 @@ namespace Datavanced.HealthcareManagement.Api.Controllers
         }
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             var result = await _authService.LoginAsync(request);
