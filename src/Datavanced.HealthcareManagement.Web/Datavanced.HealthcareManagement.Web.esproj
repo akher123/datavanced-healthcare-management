@@ -7,4 +7,8 @@
     <!-- Folder where production build objects will be placed -->
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist\Datavanced.HealthcareManagement.Web\browser\</BuildOutputFolder>
   </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="src\app\core\services\" />
+    <Folder Include="src\app\features\" />
+  </ItemGroup>
 </Project>
