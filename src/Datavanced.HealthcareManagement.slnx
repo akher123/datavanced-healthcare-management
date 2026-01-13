@@ -3,4 +3,8 @@
   <Project Path="Datavanced.HealthcareManagement.Data/Datavanced.HealthcareManagement.Data.csproj" Id="60e0b48b-46f3-4c7b-afd0-fa4d9d4ecebe" />
   <Project Path="Datavanced.HealthcareManagement.Services/Datavanced.HealthcareManagement.Services.csproj" Id="491fe703-885d-4abc-9c4d-b6e0a549a52f" />
   <Project Path="Datavanced.HealthcareManagement.Shared/Datavanced.HealthcareManagement.Shared.csproj" Id="d885db0b-fd28-422d-9f58-db57890f4634" />
+  <Project Path="Datavanced.HealthcareManagement.Web/Datavanced.HealthcareManagement.Web.esproj">
+    <Build />
+    <Deploy />
+  </Project>
 </Solution>
