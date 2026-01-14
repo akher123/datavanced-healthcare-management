@@ -2,10 +2,6 @@
   font-size: 0.75rem;
 }
 
-.btn-xs {
-  font-size: 0.7rem;
-}
-
-.cursor-pointer {
-  cursor: pointer;
+.form-control-sm, .form-select-sm {
+  padding: 0.4rem 0.5rem;
 }
