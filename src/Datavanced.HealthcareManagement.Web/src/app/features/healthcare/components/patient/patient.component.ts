@@ -10,7 +10,13 @@ import { PaginationRequest, ApiResponse } from '../../../../core/models/core.mod
 @Component({
   selector: 'app-patient',
   standalone: false,
-  templateUrl: './patient.component.html'
+  templateUrl: './patient.component.html',
+  styles: [`
+    .x-small { font-size: 0.75rem; }
+    .btn-xs { font-size: 0.75rem; padding: 0.25rem 0.5rem; }
+    .cursor-pointer { cursor: pointer; }
+    .form-label { margin-bottom: 0.2rem; font-weight: 600; color: #495057; }
+  `]
 })
 export class PatientComponent implements OnInit {
   patients: Patient[] = [];
@@ -23,8 +29,7 @@ export class PatientComponent implements OnInit {
   showForm = false;
   isEditing = false;
 
-  constructor(private fb: FormBuilder, private patientService: PatientService, private caregiverService: CaregiverService
-  ) {
+  constructor(private fb: FormBuilder, private patientService: PatientService, private caregiverService: CaregiverService) {
     this.initForm();
   }
 
@@ -42,10 +47,10 @@ export class PatientComponent implements OnInit {
   initForm() {
     this.patientForm = this.fb.group({
       patientId: [0],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
+      firstName: ['', [Validators.required, Validators.minLength(2)]],
+      lastName: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
-      phone: ['', Validators.required],
+      phone: ['', [Validators.required, Validators.pattern('^[0-9-+ ]*$')]],
       dateOfBirth: ['', Validators.required],
       officeId: [1],
       caregiverIds: [[]]
@@ -74,7 +79,7 @@ export class PatientComponent implements OnInit {
       this.request.sortBy = column;
       this.request.descending = false;
     }
-    this.request.pageIndex = 1; 
+    this.request.pageIndex = 1;
     this.loadPatients();
   }
 
@@ -90,11 +95,12 @@ export class PatientComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.patientForm.invalid) return;
+    if (this.patientForm.invalid) {
+      this.patientForm.markAllAsTouched();
+      return;
+    }
+
     const formValue = this.patientForm.value;
-
-    const patientId = formValue.patientId;
-
     const patientDto: CreatePatientDto = {
       officeId: formValue.officeId,
       firstName: formValue.firstName,
@@ -102,49 +108,40 @@ export class PatientComponent implements OnInit {
       dateOfBirth: formValue.dateOfBirth,
       phone: formValue.phone,
       email: formValue.email,
-      isActive: formValue.isActive ?? true,
-      caregivers: formValue.caregiverIds 
+      isActive: true,
+      caregivers: formValue.caregiverIds
     };
 
-    if (this.isEditing && patientId > 0) {
-      this.patientService.updatePatient(patientId, patientDto).subscribe({
+    if (this.isEditing && formValue.patientId > 0) {
+      this.patientService.updatePatient(formValue.patientId, patientDto).subscribe({
         next: (res) => this.handleResponse(res),
-        error: (err) => console.error('Update failed', err)
+        error: (err) => alert('Update failed')
       });
     } else {
       this.patientService.createPatient(patientDto).subscribe({
         next: (res) => this.handleResponse(res),
-        error: (err) => console.error('Creation failed', err)
+        error: (err) => alert('Creation failed')
+      });
+    }
+  }
+
+  deletePatient(id: number) {
+    if (confirm('Permanently delete this patient and their caregiver assignments?')) {
+      this.patientService.deletePatient(id).subscribe({
+        next: (res) => {
+          if (!res.isError) this.loadPatients();
+          else alert(res.errorMessage);
+        }
       });
     }
   }
 
   private handleResponse(res: ApiResponse<any>) {
     if (!res.isError) {
-      this.cancel(); 
-      this.loadPatients(); 
+      this.cancel();
+      this.loadPatients();
     } else {
       alert(res.errorMessage);
-    }
-  }
-
-  deletePatient(id: number) {
-    // Simple browser confirmation (or use a custom modal)
-    if (confirm('Are you sure you want to delete this patient record? This action cannot be undone.')) {
-      this.patientService.deletePatient(id).subscribe({
-        next: (res) => {
-          if (!res.isError) {
-            // Refresh the list and show success
-            this.loadPatients();
-          } else {
-            alert(res.errorMessage || 'An error occurred while deleting.');
-          }
-        },
-        error: (err) => {
-          console.error('Delete failed', err);
-          alert('Server error: Could not delete patient.');
-        }
-      });
     }
   }
 
@@ -152,5 +149,11 @@ export class PatientComponent implements OnInit {
     this.showForm = false;
     this.isEditing = false;
     this.patientForm.reset({ patientId: 0, officeId: 1, caregiverIds: [] });
+  }
+
+  // Helper for Template
+  isInvalid(controlName: string): boolean {
+    const control = this.patientForm.get(controlName);
+    return !!(control && control.invalid && (control.dirty || control.touched));
   }
 }

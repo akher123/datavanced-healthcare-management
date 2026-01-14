@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { API_BASE_URL, API_ENDPOINTS } from '../../core/config/api.config';
 import { Observable, tap } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 
@@ -13,11 +14,15 @@ export interface LoginResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'https://localhost:7024/api/hcms/auth';
-  private readonly TOKEN_KEY = 'auth_token';
 
+  private readonly TOKEN_KEY = 'auth_token';
   private loggedIn$ = new BehaviorSubject<boolean>(this.hasToken());
-  constructor(private http: HttpClient) { }
+  private readonly apiUrl: string;
+  constructor(
+    private http: HttpClient,
+    @Inject(API_BASE_URL) baseUrl: string) {
+    this.apiUrl = `${baseUrl}${API_ENDPOINTS.auths}`;
+  }
 
   login(credentials: any): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials).pipe(
@@ -30,8 +35,6 @@ export class AuthService {
     );
   }
 
-
-
   private hasToken(): boolean {
     return !!localStorage.getItem(this.TOKEN_KEY);
   }
@@ -39,7 +42,6 @@ export class AuthService {
   isLoggedIn(): boolean {
     return this.loggedIn$.value;
   }
-
 
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);
@@ -56,5 +58,5 @@ export class AuthService {
 
 }
 
- 
+
 
