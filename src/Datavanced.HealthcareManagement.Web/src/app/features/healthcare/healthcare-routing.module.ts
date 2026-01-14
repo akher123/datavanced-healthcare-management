@@ -13,6 +13,11 @@ const routes: Routes = [
   {
     path: 'patient',
     component: PatientComponent
+  },
+  {
+    path: '',
+    redirectTo: 'dashboard',
+    pathMatch: 'full'
   }
 ];
 

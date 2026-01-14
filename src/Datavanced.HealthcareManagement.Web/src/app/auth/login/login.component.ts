@@ -53,12 +53,11 @@ export class LoginComponent implements OnInit {
 
     this.isLoading = true;
     const credentials = this.loginForm.getRawValue();
-    this.authService.logout();
 
     this.authService.login(credentials).subscribe({
       next: () => {
         this.isLoading = false;
-        this.router.navigate(['/patient']);
+        this.router.navigate(['/healthcare/patient']);
       },
       error: (err) => {
         this.isLoading = false;

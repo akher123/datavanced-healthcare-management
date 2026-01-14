@@ -151,7 +151,6 @@ export class PatientComponent implements OnInit {
     this.patientForm.reset({ patientId: 0, officeId: 1, caregiverIds: [] });
   }
 
-  // Helper for Template
   isInvalid(controlName: string): boolean {
     const control = this.patientForm.get(controlName);
     return !!(control && control.invalid && (control.dirty || control.touched));
