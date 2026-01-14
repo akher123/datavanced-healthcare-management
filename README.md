@@ -340,5 +340,15 @@ The application automatically seeds roles and users into the database on startup
 **With JWT Token:**
 <img width="1742" height="861" alt="image" src="https://github.com/user-attachments/assets/fd80e602-d106-42ae-a231-d2eeedbd1922" />
 
+**Datavanced.HealthcareManagement.Web**
+## Healthcare Management Web Application
+A high-performance clinical solution built with Angular. Features include Lazy Loaded modules for speed, JWT-based Interceptors for security, and a Server-Side Data Grid supporting complex paging, sorting, and multi-parameter searching.
+
+<img width="537" height="760" alt="image" src="https://github.com/user-attachments/assets/4815a6df-99f1-4698-a052-a8d8c646bd82" />
+
+<img width="1913" height="711" alt="image" src="https://github.com/user-attachments/assets/cf9a0bad-2a64-415d-9554-e0df9d264c9f" />
+**A comprehensive CRUD module featuring server-side pagination, dynamic sorting, and real-time search capabilities. **
+<img width="1908" height="985" alt="image" src="https://github.com/user-attachments/assets/ce320ac7-219e-4f17-855e-f50ec09b3fbf" />
+
 
 
