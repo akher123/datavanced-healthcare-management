@@ -3,7 +3,7 @@ namespace Datavanced.HealthcareManagement.Services;
 
 public interface ICaregiverService
 {
-    Task<IEnumerable<CaregiverDto>> SearchCaregiversAsync(string keyword);
+    Task<IEnumerable<CaregiverSearchDto>> SearchCaregiversAsync(string keyword,int officeId);
     Task<PaginationResult<CaregiverDto>> GetCaregiverPaginationAsync(PaginationRequest query, CancellationToken cancellationToken);
     Task<ResponseMessage<CaregiverDto>> CreateAsync(CreateCaregiverDto dto, CancellationToken cancellationToken);
     Task<ResponseMessage<bool>> UpdateCaregiverAsync(int id, UpdateCaregiverDto dto, CancellationToken cancellationToken);
@@ -82,17 +82,15 @@ public class CaregiverService : ICaregiverService
         return new PaginationResult<CaregiverDto>(caregivers.PageIndex, caregivers.PageSize, caregivers.TotalCount, dtos);
     }
 
-    public async Task<IEnumerable<CaregiverDto>> SearchCaregiversAsync(string keyword)
+    public async Task<IEnumerable<CaregiverSearchDto>> SearchCaregiversAsync(string keyword,int officeId)
     {
-        var caregivers = await _repository.SearchCaregiversAsync(keyword);
+        var caregivers = await _repository.SearchCaregiversAsync(keyword, officeId);
 
         // Map entity to DTO
-        return caregivers.Select(c => new CaregiverDto
+        return caregivers.Select(c => new CaregiverSearchDto
         {
             CaregiverId = c.CaregiverId,
-            FirstName = c.FirstName,
-            LastName = c.LastName,
-            Phone = c.Phone
+            CaregiverName = c.FirstName+" "+ c.LastName
         });
     }
 

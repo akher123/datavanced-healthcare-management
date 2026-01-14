@@ -16,7 +16,6 @@ public class PatientsController : BaseApiController<PatientsController>
 
     
     [HttpGet("get-patients-by-Pagination")]
-    [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Client)]
     [Authorize(Roles = nameof(SystemRole.Admin) + "," + nameof(SystemRole.Doctor) + "," + nameof(SystemRole.Nurse) + "," + nameof(SystemRole.Receptionist))]
     public async Task<ActionResult<ResponseMessage<PaginationResult<PatientDto>>>>GetPatientsAsync([FromQuery] PaginationRequest query, CancellationToken cancellationToken)
     {
@@ -42,7 +41,7 @@ public class PatientsController : BaseApiController<PatientsController>
     [Authorize(Roles = nameof(SystemRole.Admin) + "," + nameof(SystemRole.Doctor) + "," + nameof(SystemRole.Receptionist))]
     public async Task<ActionResult<ResponseMessage<bool>>>CreatePatientAsync([FromBody] CreatePatientDto dto,CancellationToken cancellationToken)
     {
-        dto.OfficeId= LoggedInUser.OfficeId;
+        dto.OfficeId= LoggedInUser.OfficeId; 
 
         var result = await _service.CreateAsync(dto, cancellationToken);
 

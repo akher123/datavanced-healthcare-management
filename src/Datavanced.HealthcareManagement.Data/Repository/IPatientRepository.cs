@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Datavanced.HealthcareManagement.Data.Repository;
 
@@ -110,9 +111,18 @@ public class PatientRepository : IPatientRepository
         _context.Patients.Update(patient);
     }
 
-    public void Delete(Patient patient)
+    public  void Delete(Patient patient)
     {
-        _context.Patients.Remove(patient);
+        if (patient != null)
+        {
+            var assignedCaregivers = _context.PatientCaregivers
+                                             .Where(pc => pc.PatientId == patient.PatientId);
+         
+            _context.PatientCaregivers.RemoveRange(assignedCaregivers);
+
+            _context.Patients.Remove(patient);
+
+        }
     }
   
 

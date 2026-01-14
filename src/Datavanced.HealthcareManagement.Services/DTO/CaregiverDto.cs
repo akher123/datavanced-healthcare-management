@@ -58,7 +58,6 @@ public class UpdateCaregiverDto
 
     public bool IsActive { get; set; }
 }
-
 public class CaregiverDto
 {
     public int CaregiverId { get; set; }
@@ -73,5 +72,13 @@ public class CaregiverDto
 
     public string FullName => $"{FirstName} {LastName}";
 
+}
+public class CaregiverSearchDto
+{
+    public int CaregiverId { get; set; }
+    public string CaregiverName { get; set; }
 
 }
+
+
+

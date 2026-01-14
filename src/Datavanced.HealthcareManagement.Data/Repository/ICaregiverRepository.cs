@@ -6,7 +6,7 @@ namespace Datavanced.HealthcareManagement.Data.Repository;
 
 public interface ICaregiverRepository
 {
-    Task<IEnumerable<Caregiver>> SearchCaregiversAsync(string searchTerm);
+    Task<IEnumerable<Caregiver>> SearchCaregiversAsync(string searchTerm, int officeId);
     Task<PaginationResult<Caregiver>> GetCaregiverFilteredAsync(PaginationRequest query, CancellationToken cancellationToken);
     Task<int> CreateAsync(Caregiver caregiver,CancellationToken cancellationToken);
     Task<int> UpdateAsync(Caregiver caregiver, CancellationToken cancellationToken);
@@ -23,7 +23,7 @@ public class CaregiverRepository : ICaregiverRepository
         this.dbContext = dbContext;
     }
 
-    public async Task<int> CreateAsync(Caregiver caregiver,CancellationToken cancellationToken)
+    public async Task<int> CreateAsync(Caregiver caregiver, CancellationToken cancellationToken)
     {
         dbContext.Caregivers.Add(caregiver);
         return await dbContext.SaveChangesAsync(cancellationToken);
@@ -115,11 +115,11 @@ public class CaregiverRepository : ICaregiverRepository
         return new PaginationResult<Caregiver>(pageIndex, pageSize, total, caregivers);
     }
 
-    public async Task<IEnumerable<Caregiver>> SearchCaregiversAsync(string searchTerm)
+    public async Task<IEnumerable<Caregiver>> SearchCaregiversAsync(string searchTerm, int officeId)
     {
-    
+
         var query = dbContext.Caregivers
-            .Where(c => c.IsActive)
+            .Where(c => c.IsActive && (officeId ==-1 || c.OfficeId==officeId)) // -1 for all if admin user todo logic infuture
             .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(searchTerm))

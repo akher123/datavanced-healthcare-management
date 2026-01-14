@@ -8,11 +8,13 @@ public class CaregiverController(ICaregiverService service) : BaseApiController<
 
     [HttpGet("get-caregivers")]
     [Authorize(Roles =  nameof(SystemRole.Admin) + ","+ nameof(SystemRole.Receptionist))]
-    public async Task<ActionResult<ResponseMessage<IEnumerable<CaregiverDto>> >> SearchCaregiversAsync([FromQuery] string keyword)
+    public async Task<ActionResult<ResponseMessage<IEnumerable<CaregiverSearchDto>> >> SearchCaregiversAsync([FromQuery] string keyword="")
     {
-        var caregivers = await _service.SearchCaregiversAsync(keyword);
+        
+
+        var caregivers = await _service.SearchCaregiversAsync(keyword, LoggedInUser.OfficeId);
    
-        return Ok(new ResponseMessage<IEnumerable<CaregiverDto>>()
+        return Ok(new ResponseMessage<IEnumerable<CaregiverSearchDto>>()
         {
             Result= caregivers,
         });

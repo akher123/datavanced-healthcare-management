@@ -14,8 +14,14 @@ public class PatientDto
     public string Email { get; set; }
     public string OfficeName { get; set; }
     public bool IsActive { get; set; }
-    public List<CaregiverDto> Caregivers { get; set; } = new List<CaregiverDto>();
+    public List<PatientCaregiverDto> Caregivers { get; set; } = new List<PatientCaregiverDto>();
 
+}
+
+public class PatientCaregiverDto
+{
+    public int CaregiverId { get; set; }
+    public string CaregiverName { get; set; }
 }
 
 // For creating/updating data

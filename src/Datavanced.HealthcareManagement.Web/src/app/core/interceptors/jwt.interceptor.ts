@@ -1,47 +1,37 @@
 import { Injectable } from '@angular/core';
-import {
-  HttpEvent,
-  HttpHandler,
-  HttpInterceptor,
-  HttpRequest,
-  HttpErrorResponse
-} from '@angular/common/http';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class JwtInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) { }
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token =
-      typeof this.authService?.getToken === 'function'
-        ? this.authService.getToken()
-        : (this.authService as any)?.token ?? null;
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    // 1. Get token safely
+    const token = this.authService.getToken();
 
-    const authorizedReq = token
-      ? req.clone({
-          setHeaders: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-      : req;
+    // 2. Clone request and add Bearer token if it exists
+    if (token) {
+      request = request.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+    }
 
-    return next.handle(authorizedReq).pipe(
+    // 3. Handle the request and catch 401 errors
+    return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        if (error.status === 401) {
-          // Clear authentication state and navigate to login
-          try {
-            if (typeof this.authService?.logout === 'function') {
-              this.authService.logout();
-            }
-          } finally {
-            this.router.navigate(['/auth/login']);
-          }
+        if (error instanceof HttpErrorResponse && error.status === 401) {
+          console.error('401 Unauthorized detected. Redirecting to login...');
+
+          this.authService.logout(); // Ensure this clears localStorage/Session
+          this.router.navigate(['/auth/login'], {
+            queryParams: { returnUrl: this.router.url }
+          });
         }
         return throwError(() => error);
       })

@@ -30,7 +30,6 @@ export class LoginComponent implements OnInit {
     return this.loginForm.controls;
   }
 
-  // Initialize reactive login form
   private initializeForm(): void {
     this.loginForm = this.fb.group({
       username: [
@@ -44,27 +43,22 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  // Handle form submission
   onSubmit(): void {
     this.submitted = true;
     this.errorMessage = '';
 
-    // Stop if form is invalid
     if (this.loginForm.invalid) {
       return;
     }
 
     this.isLoading = true;
     const credentials = this.loginForm.getRawValue();
-
-    // Optional: Clear previous authentication state
     this.authService.logout();
 
-    // Call login API
     this.authService.login(credentials).subscribe({
       next: () => {
         this.isLoading = false;
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/patient']);
       },
       error: (err) => {
         this.isLoading = false;

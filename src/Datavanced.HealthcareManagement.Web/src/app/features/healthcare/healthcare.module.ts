@@ -2,12 +2,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { HealthcareRoutingModule } from './healthcare-routing.module';
-import { DashboardComponent } from './dashboard/dashboard.component';
+import { PatientComponent } from './components/patient/patient.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 
 @NgModule({
   declarations: [
-    DashboardComponent
+    DashboardComponent,
+    PatientComponent
   ],
   imports: [
     CommonModule,

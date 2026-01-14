@@ -31,7 +31,12 @@ public class PatientService : IPatientService
             Phone = p.Phone,
             Email = p.Email,
             OfficeName = p.Office?.OfficeName ?? string.Empty,
-            IsActive = p.IsActive
+            IsActive = p.IsActive,
+            Caregivers=p.PatientCaregivers?.Select(pc=> new PatientCaregiverDto
+            {
+                CaregiverId=pc.CaregiverId,
+                CaregiverName= pc.Caregiver.FirstName+" "+pc.Caregiver.LastName,
+            }).ToList() ?? new List<PatientCaregiverDto>()
         });
 
 
@@ -54,17 +59,12 @@ public class PatientService : IPatientService
             throw new BadRequestException("Invalid Request.",nameof(patient));
         }
 
-        var caregivers = patient.PatientCaregivers?.Select(pc => new CaregiverDto()
+        var caregivers = patient.PatientCaregivers?.Select(pc => new PatientCaregiverDto()
         {
             CaregiverId = pc.CaregiverId,
-            FirstName = pc.Caregiver.FirstName,
-            LastName = pc.Caregiver.LastName,
-            Phone = pc.Caregiver.Phone,
-            Email = pc.Caregiver.Email,
-            OfficeName = pc.Caregiver.Office?.OfficeName ?? string.Empty,
-            CreatedAt = pc.Caregiver.CreatedAt,
-            IsActive = pc.Caregiver.IsActive
-        }).ToList() ?? new List<CaregiverDto>();
+            CaregiverName = pc.Caregiver.FirstName,
+
+        }).ToList() ?? new List<PatientCaregiverDto>();
 
         var patientdto= new PatientDto
         {

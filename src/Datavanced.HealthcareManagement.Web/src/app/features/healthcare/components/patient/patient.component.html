@@ -1,0 +1,145 @@
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="h4 text-dark fw-bold mb-0">Patient Management</h2>
+      <p class="text-muted small mb-0">Clinical database and caregiver assignments</p>
+    </div>
+    <button class="btn btn-primary shadow-sm px-4 rounded-pill" (click)="showForm = !showForm">
+      <i class="bi" [class.bi-person-plus-fill]="!showForm" [class.bi-x-lg]="showForm"></i>
+      {{ showForm ? ' Close Form' : ' Add Patient' }}
+    </button>
+  </div>
+
+  <div class="input-group mb-4 shadow-sm border rounded">
+    <span class="input-group-text bg-white border-0 text-muted ps-3">
+      <i class="bi bi-search"></i>
+    </span>
+    <input type="text" class="form-control border-0 py-2" placeholder="Search records..." (input)="searchSubject.next($any($event.target).value)">
+  </div>
+
+  @if (showForm) {
+  <div class="card shadow-sm border-0 mb-4 bg-light p-4 animate__animated animate__fadeIn">
+    <div class="d-flex align-items-center mb-4 text-primary">
+      <i class="bi bi-person-lines-fill fs-4 me-2"></i>
+      <h5 class="fw-bold mb-0">{{ isEditing ? 'Update Patient Record' : 'Register New Patient' }}</h5>
+    </div>
+
+    <form [formGroup]="patientForm" (ngSubmit)="onSubmit()" class="row g-3">
+      <div class="col-md-4">
+        <label class="form-label small fw-bold text-secondary">First Name</label>
+        <input formControlName="firstName" class="form-control border-0 shadow-sm">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label small fw-bold text-secondary">Last Name</label>
+        <input formControlName="lastName" class="form-control border-0 shadow-sm">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label small fw-bold text-secondary">Date of Birth</label>
+        <input type="date" formControlName="dateOfBirth" class="form-control border-0 shadow-sm">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label small fw-bold text-secondary">Email</label>
+        <input type="email" formControlName="email" class="form-control border-0 shadow-sm">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label small fw-bold text-secondary">Phone</label>
+        <input formControlName="phone" class="form-control border-0 shadow-sm">
+      </div>
+      <div class="col-md-12">
+        <label class="form-label small fw-bold text-secondary">Assign Caregivers</label>
+        <select multiple formControlName="caregiverIds" class="form-select border-0 shadow-sm" style="min-height: 100px;">
+          @for (cg of allCaregivers; track cg.caregiverId) {
+          <option [value]="cg.caregiverId"> {{ cg.caregiverName }}</option>
+          }
+        </select>
+        <div class="form-text small">Use <kbd>Ctrl</kbd> to select multiple practitioners.</div>
+      </div>
+      <div class="col-12 text-end mt-4">
+        <button type="button" class="btn btn-outline-secondary border-0 me-2" (click)="cancel()">Cancel</button>
+        <button type="submit" class="btn btn-dark px-4 rounded-pill" [disabled]="patientForm.invalid">
+          {{ isEditing ? 'Save Changes' : 'Create Record' }}
+        </button>
+      </div>
+    </form>
+  </div>
+  }
+
+  <div class="card border-0 shadow-sm overflow-hidden">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-primary">
+          <tr>
+            <th (click)="onSort('FirstName')" class="ps-4 py-3 border-0 cursor-pointer" style="cursor: pointer;">
+              <small class="fw-bold text-uppercase opacity-75">Patient</small>
+              @if(request.sortBy === 'FirstName'){ <i class="bi ms-1 text-info" [class.bi-arrow-down]="request.descending" [class.bi-arrow-up]="!request.descending"></i> }
+            </th>
+            <th class="py-3 border-0"><small class="fw-bold text-uppercase opacity-75">Contact</small></th>
+            <th (click)="onSort('DateOfBirth')" class="py-3 border-0 cursor-pointer" style="cursor: pointer;">
+              <small class="fw-bold text-uppercase opacity-75">DOB</small>
+              @if(request.sortBy === 'DateOfBirth'){ <i class="bi ms-1 text-info" [class.bi-arrow-down]="request.descending" [class.bi-arrow-up]="!request.descending"></i> }
+            </th>
+            <th class="py-3 border-0 text-center"><small class="fw-bold text-uppercase opacity-75">Office</small></th>
+            <th class="py-3 border-0"><small class="fw-bold text-uppercase opacity-75">Care Team</small></th>
+            <th class="py-3 border-0 text-center"><small class="fw-bold text-uppercase opacity-75">Status</small></th>
+            <th class="text-end pe-4 py-3 border-0"><small class="fw-bold text-uppercase opacity-75">Actions</small></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of patients; track item.patientId) {
+          <tr>
+            <td class="ps-4">
+              <div class="fw-bold text-primary">{{ item.firstName }} {{ item.lastName }}</div>
+              <small class="text-muted">ID: #{{ item.patientId }}</small>
+            </td>
+            <td>
+              <div class="small d-flex align-items-center mb-1">
+                <i class="bi bi-envelope text-muted me-2"></i> {{ item.email }}
+              </div>
+              <div class="small d-flex align-items-center">
+                <i class="bi bi-telephone text-muted me-2"></i> {{ item.phone }}
+              </div>
+            </td>
+            <td class="small text-dark">{{ item.dateOfBirth | date:'mediumDate' }}</td>
+            <td class="text-center">
+              <span class="badge bg-light text-dark border fw-normal">{{ item.officeName }}</span>
+            </td>
+            <td>
+              <div class="d-flex flex-wrap gap-1">
+                @for (cg of item.caregivers; track cg.caregiverId) {
+                <span class="badge bg-info text-white fw-light" style="font-size: 0.7rem;">{{ cg.caregiverName }}</span>
+                }
+              </div>
+            </td>
+            <td class="text-center">
+              <span class="badge rounded-pill"
+                    [class.bg-success]="item.isActive"
+                    [class.bg-warning]="!item.isActive">
+                {{ item.isActive ? 'Active' : 'Inactive' }}
+              </span>
+            </td>
+            <td class="text-end pe-4">
+              <div class="btn-group shadow-sm overflow-hidden rounded">
+                <button class="btn btn-sm btn-primary px-3" (click)="editPatient(item)">
+                  <i class="bi bi-pencil-square me-1"></i> Edit
+                </button>
+                <button class="btn btn-sm btn-danger px-3" (click)="deletePatient(item.patientId)">
+                  <i class="bi bi-trash3-fill me-1"></i> Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card-footer bg-white border-top-0 d-flex justify-content-between align-items-center py-3 px-4">
+      <div class="small text-muted">Showing <b>{{ patients.length }}</b> entries</div>
+      <div class="btn-group">
+        <button class="btn btn-sm btn-outline-dark px-3" [disabled]="request.pageIndex === 1" (click)="request.pageIndex = request.pageIndex - 1; loadPatients()">Prev</button>
+        <span class="btn btn-sm btn-light disabled px-3 fw-bold">Page {{ request.pageIndex }}</span>
+        <button class="btn btn-sm btn-outline-dark px-3" [disabled]="(request.pageIndex * request.pageSize) >= totalCount" (click)="request.pageIndex = request.pageIndex + 1; loadPatients()">Next</button>
+      </div>
+    </div>
+  </div>
+</div>
