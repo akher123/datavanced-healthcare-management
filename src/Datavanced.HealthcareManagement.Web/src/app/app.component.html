@@ -13,13 +13,30 @@
     <div class="collapse navbar-collapse" id="navbarContent">
 
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-     
+
         @if (isLoggedIn) {
         <li class="nav-item">
-          <a class="nav-link" routerLink="/healthcare/dashboard" routerLinkActive="active">Dashboard</a>
+          <a class="nav-link" routerLink="/healthcare/dashboard" routerLinkActive="active">
+            <i class="bi bi-speedometer2 me-1"></i> Dashboard
+          </a>
         </li>
+
         <li class="nav-item">
-          <a class="nav-link" routerLink="/healthcare/patient" routerLinkActive="active">Patients</a>
+          <a class="nav-link" routerLink="/healthcare/patient" routerLinkActive="active">
+            <i class="bi bi-people me-1"></i> Patients
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/healthcare/caregiver" routerLinkActive="active">
+            <i class="bi bi-heart-pulse me-1"></i> Caregivers
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/healthcare/office" routerLinkActive="active">
+            <i class="bi bi-building me-1"></i> Offices
+          </a>
         </li>
         }
       </ul>

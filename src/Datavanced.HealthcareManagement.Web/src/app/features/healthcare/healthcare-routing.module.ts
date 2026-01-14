@@ -3,12 +3,22 @@ import { RouterModule, Routes } from '@angular/router';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { PatientComponent } from './components/patient/patient.component';
+import { OfficeComponent } from './components/office/office.component';
+import { CaregiverComponent } from './components/caregiver/caregiver.component';
 import { CoreModule } from '../../core/core.module';
 
 const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent
+  },
+  {
+    path: 'office',
+    component: OfficeComponent
+  },
+  {
+    path: 'caregiver',
+    component: CaregiverComponent
   },
   {
     path: 'patient',
